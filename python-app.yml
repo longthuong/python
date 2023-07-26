@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thuong-python-deployment
+  namespace: thuong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thuong-python-deployment
+  template:
+    metadata:
+      labels:
+        app: thuong-python-deployment
+    spec:
+      containers:
+      - name: thuong-python
+        image: thuongql/python-app
+        ports:
+        - containerPort: 5000
+        resources:
+         limits:
+          cpu: 100m
+          memory: 100Mi
+         requests:
+          cpu: 50m
+          memory: 50Mi
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thuong-python-service
+  namespace: thuong
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+    name: http
+    nodePort: 30889
+  selector:
+    app: thuong-python-deployment
+  type: NodePort
